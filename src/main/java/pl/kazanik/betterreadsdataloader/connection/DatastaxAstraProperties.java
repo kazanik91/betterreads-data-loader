@@ -3,7 +3,6 @@ package pl.kazanik.betterreadsdataloader.connection;
 import java.io.File;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
 @ConfigurationProperties(prefix = "datastax.astra")
 public class DatastaxAstraProperties {

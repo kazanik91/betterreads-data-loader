@@ -1,11 +1,15 @@
 spring.main.allow-circular-references: true
 
+datadump.location:
+    authors: src/main/resources/data/test-authors.txt
+    works: src/main/resources/data/test-works.txt
+
 spring:
     cassandra:
         keyspace-name: main
         username: ${client_id}
         password: ${client_secret}
-        schema-action: create-if-not-exists
+        schema-action: recreate
         request:
             timeout: 10s
         connection:

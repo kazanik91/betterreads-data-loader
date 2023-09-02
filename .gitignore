@@ -42,5 +42,5 @@ nb*.*
 src/main/resources/secure-connect-betterreads.zip
 
 ### Test Data ###
-test-authors.txt
-test-works.txt
+src/main/resources/data/test-authors.txt
+src/main/resources/data/test-works.txt
