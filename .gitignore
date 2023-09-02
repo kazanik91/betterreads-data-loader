@@ -33,9 +33,14 @@ out/
 /dist/
 /nbdist/
 /.nb-gradle/
+nb*.*
 
 ### VS Code ###
 .vscode/
 
 ### DataStax Secure Bundle ###
 src/main/resources/secure-connect-betterreads.zip
+
+### Test Data ###
+test-authors.txt
+test-works.txt
