@@ -8,6 +8,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,7 +46,20 @@ public class BooksJsonDumpParser implements IJsonDumpParser<BookEntity>{
         return authorIds;
     }
     
+    public Optional<String> findAuthorNameById(String authorId) {
+        AuthorEntity a = new AuthorEntity();
+        a.setId(authorId);
+        int index = authors.indexOf(a);
+        if (index != -1) {
+            return Optional.of(authors.get(index).getName());
+        }
+        else {
+            return Optional.empty();
+        }
+    }
+    
     public List<String> parseAuthorNames(List<String> authorIds) {
+        /*
         List<String> authorNames = new ArrayList<>();
         authorIds.forEach(authorId -> {
             AuthorEntity a = new AuthorEntity();
@@ -56,6 +71,16 @@ public class BooksJsonDumpParser implements IJsonDumpParser<BookEntity>{
                 authorNames.add(authorName);
             }
         });
+        */
+        List<String> authorNames = authorIds.stream()
+                .map(authorId -> findAuthorNameById(authorId))
+                .map(optionalAuthor -> {
+                    if (!optionalAuthor.isPresent()) {
+                        return "Unknown Author";
+                    }
+                    return optionalAuthor.get();
+                })
+                .collect(Collectors.toList());
         return authorNames;
     }
     

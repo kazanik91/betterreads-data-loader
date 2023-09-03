@@ -4,7 +4,7 @@
  */
 package pl.kazanik.betterreadsdataloader.parser.json.factory;
 
-import pl.kazanik.betterreadsdataloader.parser.json.JsonParser;
+import pl.kazanik.betterreadsdataloader.parser.json.JsonParserManager;
 
 /**
  *
@@ -13,5 +13,5 @@ import pl.kazanik.betterreadsdataloader.parser.json.JsonParser;
 @FunctionalInterface
 public interface IJsonParserFactory<T> {
     
-    public abstract JsonParser<T> createJsonParser();
+    public abstract JsonParserManager<T> createJsonParser();
 }

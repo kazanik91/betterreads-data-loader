@@ -8,7 +8,7 @@ import java.util.List;
 import pl.kazanik.betterreadsdataloader.author.AuthorEntity;
 import pl.kazanik.betterreadsdataloader.book.BookEntity;
 import pl.kazanik.betterreadsdataloader.parser.json.IJsonDumpParser;
-import pl.kazanik.betterreadsdataloader.parser.json.JsonParser;
+import pl.kazanik.betterreadsdataloader.parser.json.JsonParserManager;
 import pl.kazanik.betterreadsdataloader.parser.json.factory.IJsonParserFactory;
 import pl.kazanik.betterreadsdataloader.parser.json.impl.BooksJsonDumpParser;
 
@@ -25,9 +25,9 @@ public class BooksJsonParserFactory implements IJsonParserFactory<BookEntity>{
     }
     
     @Override
-    public JsonParser<BookEntity> createJsonParser() {
+    public JsonParserManager<BookEntity> createJsonParser() {
         IJsonDumpParser<BookEntity> booksDumpParser = new BooksJsonDumpParser(authors);
-        JsonParser<BookEntity> booksParser = new JsonParser<>(booksDumpParser);
+        JsonParserManager<BookEntity> booksParser = new JsonParserManager<>(booksDumpParser);
         return booksParser;
     }
     

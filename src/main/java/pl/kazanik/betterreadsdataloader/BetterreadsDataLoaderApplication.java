@@ -3,6 +3,7 @@ package pl.kazanik.betterreadsdataloader;
 import jakarta.annotation.PostConstruct;
 import java.nio.file.Path;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,18 +12,23 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import pl.kazanik.betterreadsdataloader.author.AuthorEntity;
+import pl.kazanik.betterreadsdataloader.author.AuthorRepository;
 import pl.kazanik.betterreadsdataloader.book.BookEntity;
+import pl.kazanik.betterreadsdataloader.book.BookRepository;
 import pl.kazanik.betterreadsdataloader.connection.DatastaxAstraProperties;
-import pl.kazanik.betterreadsdataloader.parser.json.JsonParser;
-import pl.kazanik.betterreadsdataloader.parser.json.factory.IJsonParserFactory;
-import pl.kazanik.betterreadsdataloader.parser.json.factory.impl.AuthorsJsonParserFactory;
-import pl.kazanik.betterreadsdataloader.parser.json.factory.impl.BooksJsonParserFactory;
+import pl.kazanik.betterreadsdataloader.parser.DataParser;
+import pl.kazanik.betterreadsdataloader.persistance.DataLoader;
 
 @SpringBootApplication
 @EnableConfigurationProperties(DatastaxAstraProperties.class)
 @EnableFeignClients
 public class BetterreadsDataLoaderApplication {
 
+    @Autowired
+    private AuthorRepository authorRepository;
+    
+    @Autowired
+    private BookRepository bookRepository;
     
     @Value("${datadump.location.authors}")
     private String authorsDumpLocation;
@@ -35,20 +41,16 @@ public class BetterreadsDataLoaderApplication {
 	}
     
     @PostConstruct
-    public void start() {
-        System.out.println("###########################");
-        System.out.println("Parsing authors...");
-        System.out.println("###########################\n");
-        IJsonParserFactory<AuthorEntity> authorsParserFactory = new AuthorsJsonParserFactory();
-        JsonParser<AuthorEntity> authorsParser = authorsParserFactory.createJsonParser();
-        List<AuthorEntity> authors = authorsParser.parse(authorsDumpLocation);
+    public void loadData() {
+        DataParser dataParser = new DataParser();
         
-        System.out.println("\n###########################");
-        System.out.println("Parsing books...");
-        System.out.println("###########################");
-        IJsonParserFactory<BookEntity> booksParserFactory = new BooksJsonParserFactory(authors);
-        JsonParser<BookEntity> booksParser = booksParserFactory.createJsonParser();
-        List<BookEntity> books = booksParser.parse(worksDumpLocation);
+        List<AuthorEntity> authors = dataParser.parseAuthorsData(authorsDumpLocation);
+        
+        List<BookEntity> books = dataParser.parseBooksData(authors, worksDumpLocation);
+        
+        DataLoader dataLoader = new DataLoader(authorRepository, bookRepository);
+        dataLoader.persistAuthors(authors);
+        dataLoader.persistBooks(books);
     }
 
 	@Bean

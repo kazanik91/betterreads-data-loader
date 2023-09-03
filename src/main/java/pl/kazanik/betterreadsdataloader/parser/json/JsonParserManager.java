@@ -17,12 +17,12 @@ import pl.kazanik.betterreadsdataloader.parser.json.exception.JsonDumpParseExcep
  *
  * @author Krysia
  */
-public class JsonParser<T> {
+public class JsonParserManager<T> {
     
-    private IJsonDumpParser<T> parser;
+    private IJsonDumpParser<T> jsonParser;
 
-    public JsonParser(IJsonDumpParser<T> parser) {
-        this.parser = parser;
+    public JsonParserManager(IJsonDumpParser<T> parser) {
+        this.jsonParser = parser;
     }
     
     public List<T> parse(String jsonDumpLocation) throws JsonDumpParseException {
@@ -33,7 +33,7 @@ public class JsonParser<T> {
             lines.forEach(lineJson -> {
                 
                 try {
-                    T entity = parser.parse(lineJson);
+                    T entity = jsonParser.parse(lineJson);
                     parsed.add(entity);
                 }
                 catch (JsonDumpParseException jsonParseEx) {
