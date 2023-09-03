@@ -9,7 +9,7 @@ spring:
         keyspace-name: main
         username: ${client_id}
         password: ${client_secret}
-        schema-action: recreate
+        schema-action: create-if-not-exists
         request:
             timeout: 10s
         connection:
@@ -25,3 +25,5 @@ astra:
         region: europe-west1
         key-space: main
         application.token: ${token}
+        
+openlibrary.book-cover.url: ${book_cover_url}
